@@ -1,4 +1,5 @@
 # calculator-vuex
+Simple calculator that reads expression from the string. Contains vuex to hold states.
 
 ## Project setup
 ```
