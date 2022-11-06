@@ -1,7 +1,12 @@
 import { createStore } from 'vuex';
 import Calculator from './components/Calculator.js';
+import createPersistedState from 'vuex-persistedstate';
 
 const store = createStore({
+    plugins: [createPersistedState({
+        storage: window.sessionStorage,
+    })],
+
     state: {
         calculator: new Calculator(),
         expression: "",
