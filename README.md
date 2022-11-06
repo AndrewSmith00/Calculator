@@ -1,5 +1,6 @@
 # calculator-vuex
 Simple calculator that reads expression from the string. Contains vuex to hold states.
+https://sparkling-nougat-ac4a69.netlify.app
 
 ## Project setup
 ```
