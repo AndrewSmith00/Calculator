@@ -16,6 +16,7 @@ const store = createStore({
         historyIsOpen: false,
         prevExprIndex: history.length,
         message: "Введите выражение",
+        isAlert: false,
     },
 
     mutations: {
@@ -23,33 +24,18 @@ const store = createStore({
             state.expression = expression;
         },
 
-        calculate(state) {
-            let result = state.calculator.Calculate(state.expression).toString();
+        updateHistory(state, result) {
+            let date = new Date().toLocaleTimeString(navigator.language, {
+                hour: "2-digit",
+                minute: "2-digit",
+            });
 
-            if (isFinite(result)) {
-                let date = new Date().toLocaleDateString("ru", {
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                });
-
-                if (state.history.length <= 15) {
-                    state.history.push({ time: date, expr: state.expression, res: result });
-                } else {
-                    state.history.shift();
-                    state.history.push({ time: date, expr: state.expression, res: result });
-                }
-
-                state.message = "Введите выражение";
-                state.expression = result;
-                state.prevExprIndex = state.history.length - 1;
+            if (state.history.length <= 15) {
+                state.history.push({ time: date, expr: state.expression, res: result });
             } else {
-                state.expression = "";
-                state.message = "Ошибка: неизвестное выражение";
+                state.history.shift();
+                state.history.push({ time: date, expr: state.expression, res: result });
             }
-
-            return false;
         },
 
         clearExpr(state) {
@@ -69,9 +55,11 @@ const store = createStore({
                 state.expression = state.history[state.prevExprIndex].expr;
                 state.prevExprIndex--;
                 state.message = 'Введите выражение'
+                state.isAlert = false;
             }
             else {
                 state.message = 'История вычислений пуста'
+                state.isAlert = true;
                 return false
             }
         },
@@ -79,17 +67,38 @@ const store = createStore({
         openHistory(state) {
             if (state.history.length != 0) {
                 state.historyIsOpen = !state.historyIsOpen;
-              } else {
+            } else {
                 state.message = 'История вычислений пуста';
-              }
+            }
         },
 
         deleteLast(state) {
-            state.expression = state.expression.slice(0, state.expression.length -1)
+            state.expression = state.expression.slice(0, state.expression.length - 1)
         },
 
         changeExpr(state, input) {
             state.expression += input;
+        }
+    },
+
+    actions: {
+        calculate({ commit, state }) {
+            let result = state.calculator.Calculate(state.expression).toString();
+
+            if (isFinite(result)) {
+                commit('updateHistory', result);
+
+                state.message = "Введите выражение";
+                state.isAlert = false;
+                state.expression = result;
+                state.prevExprIndex = state.history.length - 1;
+            } else {
+                state.expression = "";
+                state.message = "Ошибка: неизвестное выражение";
+                state.isAlert = true;
+            }
+
+            return false;
         }
     }
 })

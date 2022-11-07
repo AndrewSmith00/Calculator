@@ -48,16 +48,10 @@
 </template>
 
 <script>
-    export default {
-        computed: {
-            numbers() {
-                return this.$store.state.numbers;
-            },
+import { mapState } from 'vuex';
 
-            operators() {
-                return this.$store.state.operators;
-            }
-        },
+    export default {
+        computed: mapState(['numbers', 'operators']),
 
         methods: {
             changeExpr(event, input) {

@@ -16,28 +16,22 @@
     >
       &#215;
     </button>
-    <label for="expression" v-html="message"></label>
+    <label :class="{alertMessage: isAlert}" for="expression" v-html="message"></label>
   </form>
 </template>
 
 <script>
-export default {
-    computed: {
-        expression() {
-            return this.$store.state.expression
-        },
+import { mapState } from 'vuex';
 
-        message() {
-            return this.$store.state.message;
-        }
-    },
+export default {
+    computed: mapState(['expression', 'message', 'isAlert']),
     methods: {
         updateExpression (e) {
             this.$store.commit('updateExpression', e.target.value);
         },
 
         calculate() {
-            this.$store.commit('calculate');
+            this.$store.dispatch('calculate');
         },
 
         clearExpr() {
@@ -97,5 +91,10 @@ label {
   position: fixed;
   top: -100px;
   left: -100px;
+}
+
+.alertMessage {
+  color: rgb(250, 64, 64);
+  font-weight: 600;
 }
 </style>

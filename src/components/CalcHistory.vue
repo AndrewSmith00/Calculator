@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isOpen" class="history">
+  <div v-if="historyIsOpen" class="history">
     <div class="history__row history__title">
       <span>Предыдущие вычисления</span>
       <button @click="clearHistory" class="clearHistoryBtn">Очистить</button>
@@ -19,16 +19,10 @@
 </template>
 
 <script>
-export default {
-    computed: {
-        history() {
-            return this.$store.state.history;
-        },
+import { mapState } from 'vuex';
 
-        isOpen() {
-            return this.$store.state.historyIsOpen;
-        }
-    },
+export default {
+    computed: mapState(['history', 'historyIsOpen']),
 
     methods: {
         clearHistory() {
