@@ -41,7 +41,7 @@
         <button
           class="input-button operator"
           v-html="'='"
-          @click="this.$store.commit('calculate')"
+          @click="this.$store.dispatch('calculate')"
         ></button>
       </div>
     </div>

@@ -19,7 +19,7 @@ export default class Calculator {
         '/': (a, b) => a / b,
         '^': (a, b) => Math.pow(a, b),
         '√': a => Math.sqrt(a),
-        '%': a => a  / 100,
+        '%': (a, b) => a * b / 100,
     }
 
     Calculate(input) {
@@ -87,6 +87,7 @@ export default class Calculator {
         try {
             let result = 0;
             let stack = [];
+            console.log(input);
     
             for (let i = 0; i < input.length; i++) {
 
@@ -110,13 +111,22 @@ export default class Calculator {
                         return stack[0];
                     }
 
-                    if (input[i] === '%' || input[i] === '√') {
+                    if ( input[i] === '√') {
                         let a = stack.pop();
                         result = this.operations[input[i]](a);
+                        stack.push(result);
+                    } else if(input[i] == '%' && (input[i+1] == '-'|| input[i+2] == '-')) {
+                        let a = stack.pop();
+                        let b = stack.pop();
+
+                        let persentage = this.operations[input[i]](b, a);
+                        result = b - persentage;
+
                         stack.push(result);
                     } else {
                         let a = stack.pop();
                         let b = stack.pop();
+                        console.log(b, input[i], a)
         
                         result = this.operations[input[i]](b, a);
         
